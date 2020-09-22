@@ -50,6 +50,11 @@ class ProjectDetail(APIView):
         if serializer.is_valid():
             serializer.save()
         return Response(serializer.data)
+    
+    def delete(self, request, pk):
+        project = self.get_object(pk)
+        project.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class PledgeList(APIView):
     def get(self, request):
@@ -70,6 +75,12 @@ class PledgeList(APIView):
         status=status.HTTP_400_BAD_REQUEST
         )
 
+class PledgeSupporterList(APIView):
+    def get(self, request, pk):
+        pledges = Pledge.objects.filter(supporter_id=pk)
+        serializer = PledgeDetailSerializer(pledges, many=True)
+        return Response(serializer.data)
+
 class PledgeDetailList(APIView):
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
@@ -86,6 +97,8 @@ class PledgeDetailList(APIView):
     def get(self, request, pk):
         pledge = self.get_object(pk)
         serializer = PledgeDetailSerializer(pledge)
+        # pledges = Pledge.objects.filter(supporter_id=pk)
+        # serializer = PledgeDetailSerializer(pledges, many=True)
         return Response(serializer.data)
 
     def put(self, request, pk):
@@ -96,7 +109,11 @@ class PledgeDetailList(APIView):
             data=data, 
             partial=True
         )
-
         if serializer.is_valid():
             serializer.save()
         return Response(serializer.data)
+
+    def delete(self, request, pk):
+        pledge = self.get_object(pk)
+        pledge.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
