@@ -30,3 +30,11 @@ class Pledge(models.Model):
         on_delete=models.CASCADE,
         related_name='supporter_pledges'
     )
+
+# models.SET_NULL
+# null=True
+# models.PROTECT
+
+# @property (django decorator)
+
+
